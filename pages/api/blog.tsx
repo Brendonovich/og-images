@@ -5,12 +5,18 @@ export const config = {
   runtime: "edge",
 };
 
-const getFont = async (url: URL) => {
-  const res = await fetch(url);
-  return await res.arrayBuffer();
-};
+const interBlack = fetch(
+  new URL(`../../assets/Inter-Black.ttf`, import.meta.url)
+).then((f) => f.arrayBuffer());
+
+const interSemibold = fetch(
+  new URL(`../../assets/Inter-Semibold.ttf`, import.meta.url)
+).then((f) => f.arrayBuffer());
 
 export default async function handler(req: NextRequest) {
+  const interBlackData = await interBlack;
+  const interSemiboldData = await interSemibold;
+
   const { searchParams } = new URL(req.url);
 
   const date = searchParams.get("date");
@@ -51,16 +57,12 @@ export default async function handler(req: NextRequest) {
       fonts: [
         {
           name: "InterBlack",
-          data: await getFont(
-            new URL(`../../assets/Inter-Black.ttf`, import.meta.url)
-          ),
+          data: interBlackData,
           style: "normal",
         },
         {
           name: "InterSemibold",
-          data: await getFont(
-            new URL(`../../assets/Inter-Semibold.ttf`, import.meta.url)
-          ),
+          data: interSemiboldData,
           style: "normal",
         },
       ],
