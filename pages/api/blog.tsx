@@ -5,18 +5,20 @@ export const config = {
   runtime: "edge",
 };
 
-const interBlack = fetch(
-  new URL(`../../assets/Inter-Black.ttf`, import.meta.url)
-).then((f) => f.arrayBuffer());
+const getFont = async (url: URL) => {
+  const res = await fetch(url);
+  return await res.arrayBuffer();
+};
 
-const interSemibold = fetch(
-  new URL(`../../assets/Inter-Semibold.ttf`, import.meta.url)
-).then((f) => f.arrayBuffer());
+const interBlack = getFont(
+  new URL(`../../assets/Inter-Black.ttf`, import.meta.url)
+);
+
+const interSemiBold = getFont(
+  new URL(`../../assets/Inter-SemiBold.ttf`, import.meta.url)
+);
 
 export default async function handler(req: NextRequest) {
-  const interBlackData = await interBlack;
-  const interSemiboldData = await interSemibold;
-
   const { searchParams } = new URL(req.url);
 
   const date = searchParams.get("date");
@@ -44,7 +46,7 @@ export default async function handler(req: NextRequest) {
           <span tw="text-yellow-400 text-5xl">Brendan</span>
           <span
             tw="mb-1 text-3xl text-neutral-300"
-            style={{ fontFamily: "InterSemibold" }}
+            style={{ fontFamily: "InterSemiBold" }}
           >
             brendonovich.dev
           </span>
@@ -57,12 +59,12 @@ export default async function handler(req: NextRequest) {
       fonts: [
         {
           name: "InterBlack",
-          data: interBlackData,
+          data: await interBlack,
           style: "normal",
         },
         {
           name: "InterSemibold",
-          data: interSemiboldData,
+          data: await interSemiBold,
           style: "normal",
         },
       ],
